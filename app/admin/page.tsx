@@ -3,7 +3,23 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { Eye, ImagePlus, LogOut, Plus, Save, Trash2 } from "lucide-react";
+import {
+  Eye,
+  EyeOff,
+  Home,
+  ImageIcon,
+  ImagePlus,
+  LayoutGrid,
+  LogOut,
+  Menu,
+  Plus,
+  Save,
+  ShoppingBag,
+  Star,
+  Trash2,
+  UtensilsCrossed,
+  X
+} from "lucide-react";
 import { useEffect, useMemo, useState, FormEvent, ChangeEvent } from "react";
 import type { MenuItem } from "@/components/MenuCard";
 
@@ -21,12 +37,17 @@ interface ContentData {
   gallery: string[];
 }
 
+const DEFAULT_ITEM_IMAGE =
+  "https://xtlchcjaksrnijakmnfv.supabase.co/storage/v1/object/public/media/assets/menu/patisseries/image_58.jpg";
+const DEFAULT_CATEGORY_IMAGE =
+  "https://xtlchcjaksrnijakmnfv.supabase.co/storage/v1/object/public/media/assets/gallery/shop/image_00.jpg";
+
 const emptyItem: Omit<MenuItem, "id"> = {
   name: "",
   categoryId: "",
   description: "",
   price: "",
-  image: "https://xtlchcjaksrnijakmnfv.supabase.co/storage/v1/object/public/media/assets/menu/patisseries/image_58.jpg",
+  image: DEFAULT_ITEM_IMAGE,
   featured: false,
   available: true,
   tag: "",
@@ -35,7 +56,7 @@ const emptyItem: Omit<MenuItem, "id"> = {
 
 const emptyCategory: Omit<Category, "id"> = {
   name: "",
-  image: "https://xtlchcjaksrnijakmnfv.supabase.co/storage/v1/object/public/media/assets/gallery/shop/image_00.jpg",
+  image: DEFAULT_CATEGORY_IMAGE,
   order: 99,
   visible: true
 };
@@ -48,12 +69,17 @@ function slugify(value: string): string {
     .replace(/(^-|-$)+/g, "");
 }
 
+function nextOrder(values: { order?: number }[]): number {
+  return values.length ? Math.max(...values.map((v) => v.order || 0)) + 1 : 1;
+}
+
 export default function AdminPage() {
   const router = useRouter();
   const [content, setContent] = useState<ContentData>({ categories: [], items: [], gallery: [] });
   const [itemForm, setItemForm] = useState<Omit<MenuItem, "id">>(emptyItem);
   const [categoryForm, setCategoryForm] = useState<Omit<Category, "id">>(emptyCategory);
   const [status, setStatus] = useState<string>("Loading content...");
+  const [menuOpen, setMenuOpen] = useState(false);
 
   useEffect(() => {
     fetch("/api/content")
@@ -92,6 +118,7 @@ export default function AdminPage() {
     if (!categoryForm.name.trim()) return;
     const nextCategory: Category = {
       ...categoryForm,
+      order: nextOrder(content.categories),
       id: slugify(categoryForm.name) || `category-${Date.now()}`
     };
     const nextContent = {
@@ -108,6 +135,7 @@ export default function AdminPage() {
     if (!itemForm.name.trim() || !itemForm.categoryId) return;
     const nextItem: MenuItem = {
       ...(itemForm as MenuItem),
+      order: nextOrder(content.items),
       id: slugify(itemForm.name) || `item-${Date.now()}`
     };
     const nextContent = {
@@ -144,7 +172,16 @@ export default function AdminPage() {
     });
   }
 
-  function editCategoryField(id: string, key: keyof Category, value: string | number | boolean): void {
+  function toggleCategoryVisible(id: string, visible: boolean): void {
+    const nextContent = {
+      ...content,
+      categories: content.categories.map((category) => (category.id === id ? { ...category, visible } : category))
+    };
+    setContent(nextContent);
+    save(nextContent);
+  }
+
+  function editCategoryField(id: string, key: keyof Category, value: string): void {
     setContent({
       ...content,
       categories: content.categories.map((category) => (category.id === id ? { ...category, [key]: value } : category))
@@ -184,23 +221,47 @@ export default function AdminPage() {
   return (
     <main className="admin-shell">
       <aside className="admin-sidebar">
-        <Image src="https://xtlchcjaksrnijakmnfv.supabase.co/storage/v1/object/public/media/assets/logo/logo.png" alt="L'Eclair de Calais logo" width={112} height={112} />
-        <h3>Back Office</h3>
-        <p style={{ color: "rgba(255,255,255,.7)", fontFamily: "Trebuchet MS, sans-serif" }}>
-          Simple editing space for menu categories, products, images, and availability.
-        </p>
-        <Link href="/">View website</Link>
-        <Link href="/menu">View menu page</Link>
-        <Link href="/gallery">View gallery</Link>
-        <button
-          className="button secondary"
-          type="button"
-          onClick={logout}
-          style={{ marginTop: 16 }}
-        >
-          <LogOut size={18} aria-hidden="true" />
-          Deconnexion
-        </button>
+        <div className="admin-sidebar-top">
+          <Image
+            className="admin-sidebar-logo"
+            src="https://xtlchcjaksrnijakmnfv.supabase.co/storage/v1/object/public/media/assets/logo/logo.png"
+            alt="L'Eclair de Calais logo"
+            width={44}
+            height={44}
+          />
+          <button
+            className="nav-toggle admin-sidebar-toggle"
+            type="button"
+            aria-label={menuOpen ? "Fermer le menu" : "Ouvrir le menu"}
+            aria-expanded={menuOpen}
+            onClick={() => setMenuOpen((value) => !value)}
+          >
+            {menuOpen ? <X size={20} aria-hidden="true" /> : <Menu size={20} aria-hidden="true" />}
+          </button>
+        </div>
+
+        <div className={`admin-sidebar-body ${menuOpen ? "open" : ""}`}>
+          <h3>Back Office</h3>
+          <p>Simple editing space for menu categories, products, images, and availability.</p>
+          <nav className="admin-sidebar-links">
+            <Link href="/">
+              <Home size={18} aria-hidden="true" />
+              View website
+            </Link>
+            <Link href="/menu">
+              <UtensilsCrossed size={18} aria-hidden="true" />
+              View menu page
+            </Link>
+            <Link href="/gallery">
+              <ImageIcon size={18} aria-hidden="true" />
+              View gallery
+            </Link>
+          </nav>
+          <button className="button secondary admin-logout" type="button" onClick={logout}>
+            <LogOut size={18} aria-hidden="true" />
+            Deconnexion
+          </button>
+        </div>
       </aside>
 
       <section className="admin-main">
@@ -214,11 +275,16 @@ export default function AdminPage() {
             Save all
           </button>
         </div>
-        <p style={{ fontFamily: "Trebuchet MS, sans-serif", color: "var(--muted)" }}>Status: {status}</p>
+        <p className={`admin-status ${status === "Saved" ? "is-saved" : status === "Could not save" ? "is-error" : ""}`}>
+          {status}
+        </p>
 
         <div className="admin-grid">
           <div className="admin-panel">
-            <h3>Categories</h3>
+            <h3 className="admin-panel-title">
+              <LayoutGrid size={20} aria-hidden="true" />
+              Categories
+            </h3>
             <div className="admin-list" style={{ marginBottom: 28 }}>
               {sortedCategories.map((category) => (
                 <article className="admin-list-item" key={category.id}>
@@ -229,35 +295,17 @@ export default function AdminPage() {
                       value={category.name}
                       onChange={(event) => editCategoryField(category.id, "name", event.target.value)}
                       onBlur={() => save()}
-                      style={{ fontWeight: 700, marginBottom: 6, width: "100%" }}
+                      className="admin-inline-input"
                     />
-                    <div style={{ display: "flex", gap: 10, alignItems: "center" }}>
+                    <label className="switch">
                       <input
-                        aria-label="Category order"
-                        type="number"
-                        min={1}
-                        value={category.order}
-                        onChange={(event) => editCategoryField(category.id, "order", Number(event.target.value))}
-                        onBlur={() => save()}
-                        style={{ width: 70 }}
+                        checked={category.visible}
+                        onChange={(event) => toggleCategoryVisible(category.id, event.target.checked)}
+                        type="checkbox"
                       />
-                      <label style={{ fontFamily: "Trebuchet MS, sans-serif", fontSize: "0.85rem" }}>
-                        <input
-                          checked={category.visible}
-                          onChange={(event) => {
-                            editCategoryField(category.id, "visible", event.target.checked);
-                            save({
-                              ...content,
-                              categories: content.categories.map((c) =>
-                                c.id === category.id ? { ...c, visible: event.target.checked } : c
-                              )
-                            });
-                          }}
-                          type="checkbox"
-                        />{" "}
-                        Visible
-                      </label>
-                    </div>
+                      <span className="switch-track" />
+                      Visible
+                    </label>
                   </div>
                   <button className="button secondary" title="Delete category" type="button" onClick={() => deleteCategory(category.id)}>
                     <Trash2 size={18} aria-hidden="true" />
@@ -266,7 +314,10 @@ export default function AdminPage() {
               ))}
             </div>
 
-            <h3>Add category</h3>
+            <h3 className="admin-panel-title">
+              <Plus size={20} aria-hidden="true" />
+              Add category
+            </h3>
             <form className="form-grid" onSubmit={addCategory}>
               <input
                 aria-label="Category name"
@@ -274,31 +325,24 @@ export default function AdminPage() {
                 value={categoryForm.name}
                 onChange={(event) => setCategoryForm({ ...categoryForm, name: event.target.value })}
               />
-              <input
-                aria-label="Category image"
-                placeholder="Image path"
-                value={categoryForm.image}
-                onChange={(event) => setCategoryForm({ ...categoryForm, image: event.target.value })}
-              />
-              <label className="button secondary" style={{ cursor: "pointer" }}>
-                <ImagePlus size={18} aria-hidden="true" />
-                Upload category image
-                <input accept="image/*" onChange={(event) => uploadImage(event, "category")} style={{ display: "none" }} type="file" />
-              </label>
-              <input
-                aria-label="Category order"
-                min="1"
-                type="number"
-                value={categoryForm.order}
-                onChange={(event) => setCategoryForm({ ...categoryForm, order: Number(event.target.value) })}
-              />
+              <div className="image-picker">
+                <Image src={categoryForm.image} alt="" width={56} height={56} />
+                <label className="button secondary" style={{ cursor: "pointer" }}>
+                  <ImagePlus size={18} aria-hidden="true" />
+                  Upload category image
+                  <input accept="image/*" onChange={(event) => uploadImage(event, "category")} style={{ display: "none" }} type="file" />
+                </label>
+              </div>
               <button className="button gold" type="submit">
                 <Plus size={18} aria-hidden="true" />
                 Add category
               </button>
             </form>
 
-            <h3 style={{ marginTop: 28 }}>Add menu item</h3>
+            <h3 className="admin-panel-title" style={{ marginTop: 28 }}>
+              <Plus size={20} aria-hidden="true" />
+              Add menu item
+            </h3>
             <form className="form-grid" onSubmit={addItem}>
               <input
                 aria-label="Item name"
@@ -335,23 +379,21 @@ export default function AdminPage() {
                 value={itemForm.tag || ""}
                 onChange={(event) => setItemForm({ ...itemForm, tag: event.target.value })}
               />
-              <input
-                aria-label="Image path"
-                placeholder="Image path"
-                value={itemForm.image}
-                onChange={(event) => setItemForm({ ...itemForm, image: event.target.value })}
-              />
-              <label className="button secondary" style={{ cursor: "pointer" }}>
-                <ImagePlus size={18} aria-hidden="true" />
-                Upload image
-                <input accept="image/*" onChange={(event) => uploadImage(event, "item")} style={{ display: "none" }} type="file" />
-              </label>
-              <label>
+              <div className="image-picker">
+                <Image src={itemForm.image} alt="" width={56} height={56} />
+                <label className="button secondary" style={{ cursor: "pointer" }}>
+                  <ImagePlus size={18} aria-hidden="true" />
+                  Upload image
+                  <input accept="image/*" onChange={(event) => uploadImage(event, "item")} style={{ display: "none" }} type="file" />
+                </label>
+              </div>
+              <label className="switch">
                 <input
                   checked={itemForm.featured || false}
                   onChange={(event) => setItemForm({ ...itemForm, featured: event.target.checked })}
                   type="checkbox"
-                />{" "}
+                />
+                <span className="switch-track" />
                 Featured on homepage
               </label>
               <button className="button gold" type="submit">
@@ -362,10 +404,13 @@ export default function AdminPage() {
           </div>
 
           <div className="admin-panel">
-            <h3>Current menu items</h3>
+            <h3 className="admin-panel-title">
+              <ShoppingBag size={20} aria-hidden="true" />
+              Current menu items
+            </h3>
             <div className="admin-list">
               {sortedItems.map((item) => (
-                <article className="admin-list-item" key={item.id} style={{ gridTemplateColumns: "72px 1fr auto" }}>
+                <article className="admin-list-item" key={item.id}>
                   <Image src={item.image} alt={item.name} width={144} height={116} />
                   <div>
                     <input
@@ -373,31 +418,42 @@ export default function AdminPage() {
                       value={item.name}
                       onChange={(event) => editItemField(item.id, "name", event.target.value)}
                       onBlur={() => save()}
-                      style={{ fontWeight: 700, width: "100%", marginBottom: 6 }}
+                      className="admin-inline-input"
                     />
                     <textarea
                       aria-label="Item description"
                       value={item.description}
                       onChange={(event) => editItemField(item.id, "description", event.target.value)}
                       onBlur={() => save()}
-                      style={{ width: "100%", marginBottom: 6, minHeight: 44 }}
+                      className="admin-inline-textarea"
                     />
-                    <div style={{ display: "flex", gap: 10, alignItems: "center", flexWrap: "wrap" }}>
+                    <div className="admin-item-meta">
                       <input
                         aria-label="Item price"
                         value={item.price}
                         onChange={(event) => editItemField(item.id, "price", event.target.value)}
                         onBlur={() => save()}
-                        style={{ width: 110 }}
+                        className="admin-inline-price"
                       />
-                      <span style={{ color: "var(--muted)", fontFamily: "Trebuchet MS, sans-serif", fontSize: "0.85rem" }}>
-                        {item.available ? "Visible" : "Masque"} - {sortedCategories.find((category) => category.id === item.categoryId)?.name}
+                      <span className="admin-item-category">
+                        {sortedCategories.find((category) => category.id === item.categoryId)?.name}
                       </span>
+                      {item.featured ? (
+                        <span className="admin-item-flag">
+                          <Star size={13} aria-hidden="true" />
+                          Featured
+                        </span>
+                      ) : null}
                     </div>
                   </div>
-                  <div style={{ display: "flex", gap: 8 }}>
-                    <button className="button secondary" title="Toggle availability" type="button" onClick={() => toggleItem(item.id, "available")}>
-                      <Eye size={18} aria-hidden="true" />
+                  <div className="admin-item-actions">
+                    <button
+                      className="button secondary"
+                      title={item.available ? "Mark as unavailable" : "Mark as available"}
+                      type="button"
+                      onClick={() => toggleItem(item.id, "available")}
+                    >
+                      {item.available ? <Eye size={18} aria-hidden="true" /> : <EyeOff size={18} aria-hidden="true" />}
                     </button>
                     <button className="button secondary" title="Delete item" type="button" onClick={() => deleteItem(item.id)}>
                       <Trash2 size={18} aria-hidden="true" />
