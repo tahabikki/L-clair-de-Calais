@@ -1379,13 +1379,18 @@ section {
   content: "";
   position: absolute;
   inset: 0;
-  background: linear-gradient(180deg, rgba(33, 33, 31, 0.1), rgba(33, 33, 31, 0.84));
+  background: linear-gradient(180deg, rgba(33, 33, 31, 0.24), rgba(33, 33, 31, 0.88));
 }
 
 .event-hero-copy {
   position: relative;
   z-index: 1;
   padding-bottom: 70px;
+  text-shadow: 0 2px 22px rgba(0, 0, 0, 0.38);
+}
+
+.event-hero .hero-copy {
+  color: rgba(255, 255, 255, 0.82);
 }
 
 .band {
@@ -1522,16 +1527,19 @@ section {
 .admin-shell {
   display: grid;
   grid-template-columns: 280px 1fr;
-  min-height: 100vh;
+  height: 100vh;
+  overflow: hidden;
   background: var(--cream);
 }
 
 .admin-sidebar {
   background: var(--ink);
   color: var(--white);
-  align-self: start;
   position: sticky;
   top: 0;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
 }
 
 .admin-sidebar-top {
@@ -1558,6 +1566,8 @@ section {
 }
 
 .admin-sidebar-body {
+  min-height: 0;
+  flex: 1;
   padding: 0 24px 28px;
   display: flex;
   flex-direction: column;
@@ -1604,9 +1614,12 @@ section {
 .admin-logout {
   width: 100%;
   justify-content: center;
+  margin-top: auto;
 }
 
 .admin-main {
+  min-height: 0;
+  overflow-y: auto;
   padding: 32px;
 }
 
@@ -1965,8 +1978,15 @@ footer {
     grid-template-columns: 1fr;
   }
 
+  .admin-shell {
+    height: auto;
+    min-height: 100vh;
+    overflow: visible;
+  }
+
   .admin-sidebar {
     position: static;
+    height: auto;
   }
 
   .admin-sidebar-toggle {
@@ -1987,6 +2007,7 @@ footer {
 
   .admin-main {
     padding: 22px;
+    overflow: visible;
   }
 
   .discover-grid {
@@ -2082,7 +2103,7 @@ footer {
 
 @media (max-width: 768px) {
   .container {
-    width: min(92vw, 1600px);
+    width: min(calc(100vw - 32px), 1600px);
   }
 
   .nav-inner {
@@ -2235,7 +2256,7 @@ footer {
   }
 
   .container {
-    width: min(96vw, 1600px);
+    width: min(calc(100vw - 32px), 1600px);
   }
 
   .brand img {
@@ -2376,6 +2397,18 @@ footer {
 
   .gallery-hero h1 {
     font-size: clamp(1.6rem, 6vw, 2rem);
+  }
+
+  .event-hero {
+    min-height: 70vh;
+  }
+
+  .event-hero-copy {
+    padding-bottom: 44px;
+  }
+
+  .event-hero h1 {
+    font-size: clamp(2rem, 12vw, 2.8rem);
   }
 
   .featured-grid {

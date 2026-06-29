@@ -52,6 +52,25 @@ const discover: DiscoverItem[] = [
   { id: "catalogue", label: "Catalogue", href: "/gallery", icon: "BookOpen" }
 ];
 
+function cleanText(value: string): string {
+  let cleaned = value;
+
+  if (/[ÃÂâ]/.test(cleaned)) {
+    const bytes = Uint8Array.from(Array.from(cleaned, (char) => char.charCodeAt(0) & 0xff));
+    cleaned = new TextDecoder("utf-8").decode(bytes);
+  }
+
+  return cleaned
+    .replaceAll("G�teau", "Gâteau")
+    .replaceAll("g�teau", "gâteau")
+    .replaceAll("Am�ricain", "Américain")
+    .replaceAll("am�ricain", "américain");
+}
+
+function cleanOptionalText(value: string | undefined): string | undefined {
+  return value ? cleanText(value) : value;
+}
+
 export async function getContent(): Promise<Content> {
   const [categoriesRes, itemsRes, galleryRes, testimonialsRes] = await Promise.all([
     supabase.from("categories").select("*").order("order"),
@@ -67,23 +86,34 @@ export async function getContent(): Promise<Content> {
 
   const items: ContentItem[] = (itemsRes.data ?? []).map((row) => ({
     id: row.id,
-    name: row.name,
-    description: row.description,
+    name: cleanText(row.name),
+    description: cleanText(row.description),
     image: row.image,
-    price: row.price,
+    price: cleanText(row.price),
     available: row.available,
-    tag: row.tag,
+    tag: cleanOptionalText(row.tag),
     featured: row.featured,
     categoryId: row.category_id,
     order: row.order
   }));
 
   return {
-    categories: (categoriesRes.data ?? []) as Category[],
+    categories: (categoriesRes.data ?? []).map((row) => ({
+      id: row.id,
+      name: cleanText(row.name),
+      image: row.image,
+      order: row.order,
+      visible: row.visible
+    })),
     items,
     gallery: (galleryRes.data ?? []).map((row) => row.url),
     discover,
-    testimonials: (testimonialsRes.data ?? []) as Testimonial[]
+    testimonials: (testimonialsRes.data ?? []).map((row) => ({
+      quote: cleanText(row.quote),
+      name: cleanText(row.name),
+      city: cleanText(row.city),
+      rating: row.rating
+    }))
   };
 }
 

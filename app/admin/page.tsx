@@ -82,12 +82,15 @@ export default function AdminPage() {
   const [menuOpen, setMenuOpen] = useState(false);
 
   useEffect(() => {
-    fetch("/api/content")
+    fetch("/api/site-data")
       .then((response) => response.json())
       .then((data: ContentData) => {
         setContent(data);
         setItemForm((form) => ({ ...form, categoryId: data.categories[0]?.id || "" }));
         setStatus("Ready");
+      })
+      .catch(() => {
+        setStatus("Could not load content");
       });
   }, []);
 
@@ -101,7 +104,7 @@ export default function AdminPage() {
 
   async function save(nextContent: ContentData = content): Promise<void> {
     setStatus("Saving...");
-    const response = await fetch("/api/content", {
+    const response = await fetch("/api/site-data", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(nextContent)

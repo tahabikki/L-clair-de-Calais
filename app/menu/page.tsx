@@ -26,12 +26,15 @@ export default function MenuPage() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetch("/api/content")
+    fetch("/api/site-data")
       .then((response) => response.json())
       .then((data: ContentData) => {
         const visible = data.categories.filter((category) => category.visible);
         setContent(data);
         setActive(visible[0]?.id || "");
+        setLoading(false);
+      })
+      .catch(() => {
         setLoading(false);
       });
   }, []);
