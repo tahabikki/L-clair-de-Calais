@@ -1,6 +1,5 @@
-import { promises as fs } from "fs";
-import path from "path";
 import { NextResponse, NextRequest } from "next/server";
+import { supabase, MEDIA_BUCKET } from "@/lib/supabaseClient";
 
 export async function POST(request: NextRequest) {
   const formData = await request.formData();
@@ -13,11 +12,16 @@ export async function POST(request: NextRequest) {
   const bytes = await file.arrayBuffer();
   const buffer = Buffer.from(bytes);
   const safeName = `${Date.now()}-${file.name.toLowerCase().replace(/[^a-z0-9.]+/g, "-")}`;
-  const uploadDir = path.join(process.cwd(), "public", "uploads");
-  const uploadPath = path.join(uploadDir, safeName);
 
-  await fs.mkdir(uploadDir, { recursive: true });
-  await fs.writeFile(uploadPath, buffer);
+  const { error } = await supabase.storage.from(MEDIA_BUCKET).upload(safeName, buffer, {
+    contentType: file.type || "application/octet-stream"
+  });
 
-  return NextResponse.json({ path: `/uploads/${safeName}` });
+  if (error) {
+    return NextResponse.json({ error: error.message }, { status: 500 });
+  }
+
+  const { data } = supabase.storage.from(MEDIA_BUCKET).getPublicUrl(safeName);
+
+  return NextResponse.json({ path: data.publicUrl });
 }
