@@ -1,0 +1,63 @@
+{
+  "categories": [
+    { "id": "best-sellers", "name": "Meilleures offres", "order": 1, "visible": true, "image": "/assets/menu/patisseries/image_58.jpg" },
+    { "id": "sandwichs", "name": "Sandwichs Poulet", "order": 2, "visible": true, "image": "/assets/menu/sandwichs/image_100.jpg" },
+    { "id": "pizzas", "name": "Pizzas", "order": 3, "visible": true, "image": "/assets/menu/pizzas/image_54.jpg" },
+    { "id": "tartelettes", "name": "Tartelettes", "order": 4, "visible": true, "image": "/assets/menu/patisseries/image_17.jpg" },
+    { "id": "patisseries", "name": "Patisseries", "order": 5, "visible": true, "image": "/assets/menu/patisseries/image_46.jpg" },
+    { "id": "viennoiseries", "name": "Viennoiseries", "order": 6, "visible": true, "image": "/assets/menu/viennoiseries/image_19.jpg" }
+  ],
+  "items": [
+    { "id": "eclair", "name": "Éclair", "categoryId": "best-sellers", "description": "Signature maison, généreux et fondant.", "price": "3,20 €", "image": "/assets/menu/patisseries/image_58.jpg", "featured": true, "available": true, "tag": "Popular", "order": 1 },
+    { "id": "croissant-aux-amandes", "name": "Croissant Aux Amandes", "categoryId": "best-sellers", "description": "Feuilletage doré et crème d'amandes.", "price": "2,00 €", "image": "/assets/menu/viennoiseries/image_19.jpg", "featured": true, "available": true, "tag": "Best seller", "order": 2 },
+    { "id": "tarte-citron", "name": "Tarte Citron", "categoryId": "best-sellers", "description": "Tarte citronnée, fraîche et équilibrée.", "price": "Sur demande", "image": "/assets/menu/patisseries/image_106.jpg", "featured": true, "available": true, "tag": "Featured", "order": 3 },
+    { "id": "pain-au-chocolat-au-lait", "name": "Pain au Chocolat Au Lait", "categoryId": "best-sellers", "description": "Viennoiserie moelleuse au chocolat au lait.", "price": "1,10 €", "image": "/assets/menu/viennoiseries/image_49.jpg", "featured": true, "available": true, "tag": "Morning", "order": 4 },
+    { "id": "tarte-aux-fraises-et-framboises", "name": "Tarte Aux Fraises Et Framboises", "categoryId": "best-sellers", "description": "Tarte fruitée aux fraises et aux framboises.", "price": "Sur demande", "image": "/assets/menu/patisseries/image_129.jpg", "featured": true, "available": true, "tag": "Seasonal", "order": 5 },
+    { "id": "gateau-americain", "name": "Gâteau Américain", "categoryId": "best-sellers", "description": "Gâteau gourmand pour les grandes envies.", "price": "Sur demande", "image": "/assets/menu/patisseries/image_113.jpg", "featured": true, "available": true, "tag": "Custom", "order": 6 },
+    { "id": "tarte-framboise", "name": "Tarte Framboise", "categoryId": "best-sellers", "description": "Tarte aux framboises, douce et légère.", "price": "Sur demande", "image": "/assets/menu/patisseries/image_46.jpg", "featured": true, "available": true, "tag": "Popular", "order": 7 },
+    { "id": "charlotte-aux-framboises", "name": "Charlotte Aux Framboises", "categoryId": "best-sellers", "description": "Charlotte fruitée, fraîche et élégante.", "price": "Sur demande", "image": "/assets/menu/patisseries/image_122.jpg", "featured": true, "available": true, "tag": "Featured", "order": 8 },
+
+    { "id": "sandwichs-poulet", "name": "Sandwichs Poulet", "categoryId": "sandwichs", "description": "Sandwich poulet + dessert au choix + boisson 33cl.", "price": "8,50 €", "image": "/assets/menu/sandwichs/image_100.jpg", "featured": false, "available": true, "tag": "Formule", "order": 9 },
+
+    { "id": "pizza-au-poulet", "name": "Pizza au poulet", "categoryId": "pizzas", "description": "Crème épices + fromage emmental + mozzarella + champignons. 26cm.", "price": "7,80 €", "image": "/assets/menu/pizzas/image_54.jpg", "featured": false, "available": true, "tag": "", "order": 10 },
+    { "id": "pizza-merguez", "name": "Pizza merguez", "categoryId": "pizzas", "description": "Sauce tomate + merguez + oignons + fromage emmental + mozzarella. 26cm.", "price": "7,80 €", "image": "/assets/menu/pizzas/image_92.jpg", "featured": false, "available": true, "tag": "", "order": 11 },
+    { "id": "pizza-saumon-fume", "name": "Pizza au Saumon Fumé", "categoryId": "pizzas", "description": "Crème épices + fromage emmental + mozzarella. 26cm.", "price": "8,90 €", "image": "/assets/menu/pizzas/image_59.jpg", "featured": false, "available": true, "tag": "Premium", "order": 12 },
+    { "id": "pizza-orientale", "name": "Pizza orientale", "categoryId": "pizzas", "description": "Sauce tomate + merguez. Poivrons verts et rouges + fromage emmental + mozzarella. 26cm.", "price": "7,80 €", "image": "/assets/menu/pizzas/image_104.jpg", "featured": false, "available": true, "tag": "Spicy", "order": 13 },
+
+    { "id": "tartelettes-fraise", "name": "Tartelettes Fraise", "categoryId": "tartelettes", "description": "Biscuits aux amandes + sablé + crème légère + fraise.", "price": "3,50 €", "image": "/assets/menu/patisseries/image_17.jpg", "featured": false, "available": true, "tag": "Fresh", "order": 14 },
+    { "id": "tartelettes-framboise", "name": "Tartelettes Framboise", "categoryId": "tartelettes", "description": "Crème légère vanille + sablé + crème aux amandes + framboise.", "price": "3,50 €", "image": "/assets/menu/patisseries/image_73.jpg", "featured": false, "available": true, "tag": "Fresh", "order": 15 },
+
+    { "id": "brownies", "name": "Brownies", "categoryId": "patisseries", "description": "Petit plaisir chocolaté, riche et fondant.", "price": "2,80 €", "image": "/assets/menu/patisseries/image_91.jpg", "featured": false, "available": true, "tag": "", "order": 16 },
+    { "id": "croissant", "name": "Croissant", "categoryId": "viennoiseries", "description": "Croissant classique, chaud et feuilleté.", "price": "1,10 €", "image": "/assets/menu/viennoiseries/image_77.jpg", "featured": false, "available": true, "tag": "Morning", "order": 17 }
+  ],
+  "gallery": [
+    "/assets/gallery/shop/image_00.jpg",
+    "/assets/gallery/pastries/image_18.jpg",
+    "/assets/gallery/shop/image_12.jpg",
+    "/assets/gallery/pastries/image_24.jpg",
+    "/assets/gallery/viennoiseries/image_31.jpg",
+    "/assets/gallery/pastries/image_39.jpg",
+    "/assets/gallery/cakes/image_45.jpg",
+    "/assets/gallery/cakes/image_66.jpg",
+    "/assets/gallery/cakes/image_81.jpg",
+    "/assets/gallery/cakes/image_100.jpg",
+    "/assets/gallery/cakes/image_128.jpg",
+    "/assets/gallery/shop/image_135.jpg"
+  ],
+  "discover": [
+    { "id": "nouveautes", "label": "Nouveautes", "href": "/menu", "icon": "Package" },
+    { "id": "commander", "label": "Commander", "href": "/menu", "icon": "ShoppingBag" },
+    { "id": "boulangerie", "label": "Boulangerie", "href": "/menu", "icon": "Wheat" },
+    { "id": "patisserie", "label": "Patisserie", "href": "/menu", "icon": "Cake" },
+    { "id": "evenements", "label": "Evenements", "href": "/vos-evenements", "icon": "ChefHat" },
+    { "id": "catalogue", "label": "Catalogue", "href": "/gallery", "icon": "BookOpen" }
+  ],
+  "testimonials": [
+    { "quote": "Qualite et gout exceptionnels. Les patisseries sont belles, fraiches et donnent envie des qu'on entre.", "name": "Client satisfait", "city": "Calais", "rating": 5 },
+    { "quote": "Service chaleureux, belles vitrines et des produits qui ont vraiment du caractere. On revient facilement.", "name": "Amateur de patisserie", "city": "Calais", "rating": 5 },
+    { "quote": "Parfait pour commander des gateaux d'evenement. Presentation soignee et tres bon accueil en boutique.", "name": "Cliente evenement", "city": "Calais", "rating": 5 },
+    { "quote": "Tres bon accueil, produits frais et beaux gateaux. Une adresse simple a recommander autour de soi.", "name": "Habitue du quartier", "city": "Calais", "rating": 5 },
+    { "quote": "La boutique donne envie, les vitrines sont propres et les commandes sont bien expliquees.", "name": "Client local", "city": "Calais", "rating": 5 },
+    { "quote": "De belles patisseries pour les anniversaires et une equipe disponible pour orienter le choix.", "name": "Commande famille", "city": "Calais", "rating": 5 }
+  ]
+}
