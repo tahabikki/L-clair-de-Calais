@@ -7,7 +7,7 @@ export const metadata: Metadata = {
   title: "L'Eclair de Calais",
   description: "Patisserie and boulangerie in Calais, France.",
   icons: {
-    icon: "/favicon.png"
+    icon: "https://xtlchcjaksrnijakmnfv.supabase.co/storage/v1/object/public/media/favicon.png"
   }
 };
 

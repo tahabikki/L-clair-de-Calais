@@ -12,8 +12,9 @@ export async function POST(request: NextRequest) {
   const bytes = await file.arrayBuffer();
   const buffer = Buffer.from(bytes);
   const safeName = `${Date.now()}-${file.name.toLowerCase().replace(/[^a-z0-9.]+/g, "-")}`;
+  const storagePath = `uploads/${safeName}`;
 
-  const { error } = await supabase.storage.from(MEDIA_BUCKET).upload(safeName, buffer, {
+  const { error } = await supabase.storage.from(MEDIA_BUCKET).upload(storagePath, buffer, {
     contentType: file.type || "application/octet-stream"
   });
 
@@ -21,7 +22,7 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
 
-  const { data } = supabase.storage.from(MEDIA_BUCKET).getPublicUrl(safeName);
+  const { data } = supabase.storage.from(MEDIA_BUCKET).getPublicUrl(storagePath);
 
   return NextResponse.json({ path: data.publicUrl });
 }
