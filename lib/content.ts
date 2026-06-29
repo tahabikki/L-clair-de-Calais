@@ -105,6 +105,21 @@ export async function saveContent(content: Content): Promise<Content> {
     if (error) throw error;
   }
 
+  const incomingCategoryIds = categories.map((category) => category.id);
+  const { data: existingCategories, error: existingCategoryError } = await supabase
+    .from("categories")
+    .select("id");
+  if (existingCategoryError) throw existingCategoryError;
+
+  const categoryIdsToDelete = (existingCategories ?? [])
+    .map((row) => row.id as string)
+    .filter((id) => !incomingCategoryIds.includes(id));
+
+  if (categoryIdsToDelete.length > 0) {
+    const { error } = await supabase.from("categories").delete().in("id", categoryIdsToDelete);
+    if (error) throw error;
+  }
+
   const itemRows = items.map((item) => ({
     id: item.id,
     category_id: item.categoryId,

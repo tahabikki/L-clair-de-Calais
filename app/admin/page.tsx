@@ -137,6 +137,31 @@ export default function AdminPage() {
     save(nextContent);
   }
 
+  function editItemField(id: string, key: keyof MenuItem, value: string): void {
+    setContent({
+      ...content,
+      items: content.items.map((item) => (item.id === id ? { ...item, [key]: value } : item))
+    });
+  }
+
+  function editCategoryField(id: string, key: keyof Category, value: string | number | boolean): void {
+    setContent({
+      ...content,
+      categories: content.categories.map((category) => (category.id === id ? { ...category, [key]: value } : category))
+    });
+  }
+
+  function deleteCategory(id: string): void {
+    if (!window.confirm("Delete this category and all of its menu items?")) return;
+    const nextContent = {
+      ...content,
+      categories: content.categories.filter((category) => category.id !== id),
+      items: content.items.filter((item) => item.categoryId !== id)
+    };
+    setContent(nextContent);
+    save(nextContent);
+  }
+
   async function uploadImage(event: ChangeEvent<HTMLInputElement>, target: "item" | "category" = "item"): Promise<void> {
     const file = event.target.files?.[0];
     if (!file) return;
@@ -193,6 +218,54 @@ export default function AdminPage() {
 
         <div className="admin-grid">
           <div className="admin-panel">
+            <h3>Categories</h3>
+            <div className="admin-list" style={{ marginBottom: 28 }}>
+              {sortedCategories.map((category) => (
+                <article className="admin-list-item" key={category.id}>
+                  <Image src={category.image} alt={category.name} width={144} height={116} />
+                  <div>
+                    <input
+                      aria-label="Category name"
+                      value={category.name}
+                      onChange={(event) => editCategoryField(category.id, "name", event.target.value)}
+                      onBlur={() => save()}
+                      style={{ fontWeight: 700, marginBottom: 6, width: "100%" }}
+                    />
+                    <div style={{ display: "flex", gap: 10, alignItems: "center" }}>
+                      <input
+                        aria-label="Category order"
+                        type="number"
+                        min={1}
+                        value={category.order}
+                        onChange={(event) => editCategoryField(category.id, "order", Number(event.target.value))}
+                        onBlur={() => save()}
+                        style={{ width: 70 }}
+                      />
+                      <label style={{ fontFamily: "Trebuchet MS, sans-serif", fontSize: "0.85rem" }}>
+                        <input
+                          checked={category.visible}
+                          onChange={(event) => {
+                            editCategoryField(category.id, "visible", event.target.checked);
+                            save({
+                              ...content,
+                              categories: content.categories.map((c) =>
+                                c.id === category.id ? { ...c, visible: event.target.checked } : c
+                              )
+                            });
+                          }}
+                          type="checkbox"
+                        />{" "}
+                        Visible
+                      </label>
+                    </div>
+                  </div>
+                  <button className="button secondary" title="Delete category" type="button" onClick={() => deleteCategory(category.id)}>
+                    <Trash2 size={18} aria-hidden="true" />
+                  </button>
+                </article>
+              ))}
+            </div>
+
             <h3>Add category</h3>
             <form className="form-grid" onSubmit={addCategory}>
               <input
@@ -292,14 +365,35 @@ export default function AdminPage() {
             <h3>Current menu items</h3>
             <div className="admin-list">
               {sortedItems.map((item) => (
-                <article className="admin-list-item" key={item.id}>
+                <article className="admin-list-item" key={item.id} style={{ gridTemplateColumns: "72px 1fr auto" }}>
                   <Image src={item.image} alt={item.name} width={144} height={116} />
                   <div>
-                    <strong>{item.name}</strong>
-                    <p style={{ margin: "4px 0", color: "var(--muted)", fontFamily: "Trebuchet MS, sans-serif" }}>{item.price} - {item.available ? "Visible" : "Masqué"}</p>
-                    <p style={{ margin: 0, color: "var(--muted)", fontFamily: "Trebuchet MS, sans-serif" }}>
-                      {sortedCategories.find((category) => category.id === item.categoryId)?.name}
-                    </p>
+                    <input
+                      aria-label="Item name"
+                      value={item.name}
+                      onChange={(event) => editItemField(item.id, "name", event.target.value)}
+                      onBlur={() => save()}
+                      style={{ fontWeight: 700, width: "100%", marginBottom: 6 }}
+                    />
+                    <textarea
+                      aria-label="Item description"
+                      value={item.description}
+                      onChange={(event) => editItemField(item.id, "description", event.target.value)}
+                      onBlur={() => save()}
+                      style={{ width: "100%", marginBottom: 6, minHeight: 44 }}
+                    />
+                    <div style={{ display: "flex", gap: 10, alignItems: "center", flexWrap: "wrap" }}>
+                      <input
+                        aria-label="Item price"
+                        value={item.price}
+                        onChange={(event) => editItemField(item.id, "price", event.target.value)}
+                        onBlur={() => save()}
+                        style={{ width: 110 }}
+                      />
+                      <span style={{ color: "var(--muted)", fontFamily: "Trebuchet MS, sans-serif", fontSize: "0.85rem" }}>
+                        {item.available ? "Visible" : "Masque"} - {sortedCategories.find((category) => category.id === item.categoryId)?.name}
+                      </span>
+                    </div>
                   </div>
                   <div style={{ display: "flex", gap: 8 }}>
                     <button className="button secondary" title="Toggle availability" type="button" onClick={() => toggleItem(item.id, "available")}>
