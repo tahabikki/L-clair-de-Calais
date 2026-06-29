@@ -1,41 +1,32 @@
 import { NextRequest, NextResponse } from "next/server";
-
-const ADMIN_USER = process.env.ADMIN_USER || "admin";
-const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || "changeme";
+import { verifySessionToken, COOKIE_NAME } from "@/lib/adminAuth";
 
 function isProtectedRequest(request: NextRequest): boolean {
   const { pathname } = request.nextUrl;
-  if (pathname.startsWith("/admin")) return true;
+  if (pathname.startsWith("/admin") && pathname !== "/admin/login") return true;
   if (pathname === "/api/content" && request.method === "POST") return true;
   if (pathname === "/api/upload" && request.method === "POST") return true;
   return false;
 }
 
-function unauthorized(): NextResponse {
-  return new NextResponse("Authentication required", {
-    status: 401,
-    headers: { "WWW-Authenticate": 'Basic realm="Admin"' }
-  });
-}
-
-export function middleware(request: NextRequest): NextResponse {
+export async function middleware(request: NextRequest): Promise<NextResponse> {
   if (!isProtectedRequest(request)) {
     return NextResponse.next();
   }
 
-  const header = request.headers.get("authorization");
-  if (!header || !header.startsWith("Basic ")) {
-    return unauthorized();
+  const token = request.cookies.get(COOKIE_NAME)?.value;
+  const isValid = await verifySessionToken(token);
+
+  if (isValid) {
+    return NextResponse.next();
   }
 
-  const decoded = Buffer.from(header.slice(6), "base64").toString("utf8");
-  const [user, password] = decoded.split(":");
-
-  if (user !== ADMIN_USER || password !== ADMIN_PASSWORD) {
-    return unauthorized();
+  if (request.nextUrl.pathname.startsWith("/admin")) {
+    const loginUrl = new URL("/admin/login", request.url);
+    return NextResponse.redirect(loginUrl);
   }
 
-  return NextResponse.next();
+  return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 }
 
 export const config = {

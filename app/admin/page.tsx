@@ -2,7 +2,8 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { Eye, ImagePlus, Plus, Save, Trash2 } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { Eye, ImagePlus, LogOut, Plus, Save, Trash2 } from "lucide-react";
 import { useEffect, useMemo, useState, FormEvent, ChangeEvent } from "react";
 import type { MenuItem } from "@/components/MenuCard";
 
@@ -48,6 +49,7 @@ function slugify(value: string): string {
 }
 
 export default function AdminPage() {
+  const router = useRouter();
   const [content, setContent] = useState<ContentData>({ categories: [], items: [], gallery: [] });
   const [itemForm, setItemForm] = useState<Omit<MenuItem, "id">>(emptyItem);
   const [categoryForm, setCategoryForm] = useState<Omit<Category, "id">>(emptyCategory);
@@ -65,6 +67,11 @@ export default function AdminPage() {
 
   const sortedItems = useMemo(() => [...content.items].sort((a, b) => (a.order || 0) - (b.order || 0)), [content.items]);
   const sortedCategories = useMemo(() => [...content.categories].sort((a, b) => a.order - b.order), [content.categories]);
+
+  async function logout(): Promise<void> {
+    await fetch("/api/admin/logout", { method: "POST" });
+    router.push("/admin/login");
+  }
 
   async function save(nextContent: ContentData = content): Promise<void> {
     setStatus("Saving...");
@@ -160,6 +167,15 @@ export default function AdminPage() {
         <Link href="/">View website</Link>
         <Link href="/menu">View menu page</Link>
         <Link href="/gallery">View gallery</Link>
+        <button
+          className="button secondary"
+          type="button"
+          onClick={logout}
+          style={{ marginTop: 16 }}
+        >
+          <LogOut size={18} aria-hidden="true" />
+          Deconnexion
+        </button>
       </aside>
 
       <section className="admin-main">
