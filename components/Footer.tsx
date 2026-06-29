@@ -8,7 +8,7 @@ export function Footer() {
     <footer>
       <div className="container footer-grid">
         <div className="footer-brand">
-          <Image src="/assets/logo/logo.png" alt={business.name} width={120} height={120} />
+          <Image src="https://xtlchcjaksrnijakmnfv.supabase.co/storage/v1/object/public/media/assets/logo/logo.png" alt={business.name} width={120} height={120} />
           <p>
             Une maison de patisserie et boulangerie a Calais, avec des produits frais, des commandes speciales,
             et une vitrine claire pour les clients.

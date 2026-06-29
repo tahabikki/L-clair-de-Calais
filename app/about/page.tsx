@@ -55,7 +55,7 @@ export default function AboutPage() {
           </div>
 
           <article className="about-hero-card" data-reveal>
-            <Image src="/assets/gallery/cakes/image_81.jpg" alt="Bakery display" fill priority />
+            <Image src="https://xtlchcjaksrnijakmnfv.supabase.co/storage/v1/object/public/media/assets/gallery/cakes/image_81.jpg" alt="Bakery display" fill priority />
           </article>
         </div>
       </section>

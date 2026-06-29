@@ -101,9 +101,9 @@ export default async function HomePage() {
             </Link>
           </div>
           <div className="pastry-mosaic" aria-label="Bakery image selection" data-reveal>
-            <Image src="/assets/gallery/image_128.jpg" alt="Patisserie selection" width={520} height={680} />
-            <Image src="/assets/gallery/image_100.jpg" alt="Fresh pastry closeup" width={360} height={420} />
-            <Image src="/assets/gallery/image_81.jpg" alt="Bakery display" width={360} height={420} />
+            <Image src="https://xtlchcjaksrnijakmnfv.supabase.co/storage/v1/object/public/media/assets/gallery/image_128.jpg" alt="Patisserie selection" width={520} height={680} />
+            <Image src="https://xtlchcjaksrnijakmnfv.supabase.co/storage/v1/object/public/media/assets/gallery/image_100.jpg" alt="Fresh pastry closeup" width={360} height={420} />
+            <Image src="https://xtlchcjaksrnijakmnfv.supabase.co/storage/v1/object/public/media/assets/gallery/image_81.jpg" alt="Bakery display" width={360} height={420} />
           </div>
         </div>
       </section>
@@ -122,7 +122,7 @@ export default async function HomePage() {
               {[...testimonials, ...testimonials].map((item, index) => (
                 <article className="testimonial-card" key={`${item.name}-${index}`} data-reveal>
                   <span className="testimonial-badge">
-                    <Image src="/assets/logo/logo.png" alt="" width={60} height={60} />
+                    <Image src="https://xtlchcjaksrnijakmnfv.supabase.co/storage/v1/object/public/media/assets/logo/logo.png" alt="" width={60} height={60} />
                   </span>
                   <p className="testimonial-quote">"{item.quote}"</p>
                   <div className="testimonial-stars" aria-label={`${item.rating} sur 5`}>
@@ -153,7 +153,7 @@ export default async function HomePage() {
 
       <section className="events-strip" data-reveal>
         <div className="container events-home">
-          <Image src="/assets/gallery/cakes/image_128.jpg" alt="Celebration pastries" width={720} height={540} />
+          <Image src="https://xtlchcjaksrnijakmnfv.supabase.co/storage/v1/object/public/media/assets/gallery/cakes/image_128.jpg" alt="Celebration pastries" width={720} height={540} />
           <div>
             <p className="kicker">Mariages, baptemes, anniversaires</p>
             <h2>Vos evenements ont leur page dediee.</h2>

@@ -8,7 +8,7 @@ export default function EventsPage() {
     <main className="site-shell">
       <SiteNav />
       <section className="event-hero">
-        <Image src="/assets/gallery/cakes/image_128.jpg" alt="Patisserie for events" fill priority />
+        <Image src="https://xtlchcjaksrnijakmnfv.supabase.co/storage/v1/object/public/media/assets/gallery/cakes/image_128.jpg" alt="Patisserie for events" fill priority />
         <div className="container event-hero-copy">
           <p className="kicker">Vos evenements</p>
           <h1>Mariages, baptemes, anniversaires</h1>
@@ -47,9 +47,9 @@ export default function EventsPage() {
       <section className="split-showcase">
         <div className="container split-inner">
           <div className="pastry-mosaic">
-            <Image src="/assets/gallery/cakes/image_128.jpg" alt="Event dessert display" width={520} height={680} />
-            <Image src="/assets/gallery/cakes/image_131.jpg" alt="Fine pastry" width={360} height={420} />
-            <Image src="/assets/gallery/shop/image_135.jpg" alt="Celebration dessert" width={360} height={420} />
+            <Image src="https://xtlchcjaksrnijakmnfv.supabase.co/storage/v1/object/public/media/assets/gallery/cakes/image_128.jpg" alt="Event dessert display" width={520} height={680} />
+            <Image src="https://xtlchcjaksrnijakmnfv.supabase.co/storage/v1/object/public/media/assets/gallery/cakes/image_131.jpg" alt="Fine pastry" width={360} height={420} />
+            <Image src="https://xtlchcjaksrnijakmnfv.supabase.co/storage/v1/object/public/media/assets/gallery/shop/image_135.jpg" alt="Celebration dessert" width={360} height={420} />
           </div>
           <form className="card contact-box form-grid">
             <p className="kicker">Demande speciale</p>

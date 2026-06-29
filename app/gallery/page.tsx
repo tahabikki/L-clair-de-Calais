@@ -1,47 +1,48 @@
-import { promises as fs } from "fs";
-import path from "path";
 import { Footer } from "@/components/Footer";
 import { SiteNav } from "@/components/SiteNav";
 import { GalleryTabs } from "@/components/GalleryTabs";
+import { supabase, MEDIA_BUCKET } from "@/lib/supabaseClient";
 
-const extensions = [".jpg", ".jpeg", ".png", ".webp"];
+const imageExtensions = [".jpg", ".jpeg", ".png", ".webp"];
+const videoExtensions = [".mp4", ".webm", ".mov"];
 
-async function listFiles(dir: string, exts: string[]): Promise<string[]> {
-  const entries = await fs.readdir(dir, { withFileTypes: true });
-  const files = await Promise.all(
-    entries.map(async (e) => {
-      if (e.isDirectory()) return [];
-      if (!exts.includes(path.extname(e.name).toLowerCase())) return [];
-      const full = path.join(dir, e.name);
-      return [`/${path.relative(path.join(process.cwd(), "public"), full).replaceAll(path.sep, "/")}`];
-    })
-  );
-  return files.flat().sort((a, b) => a.localeCompare(b, undefined, { numeric: true }));
+function publicUrl(storagePath: string): string {
+  return supabase.storage.from(MEDIA_BUCKET).getPublicUrl(storagePath).data.publicUrl;
+}
+
+function hasExtension(name: string, exts: string[]): boolean {
+  return exts.some((ext) => name.toLowerCase().endsWith(ext));
+}
+
+async function listFiles(prefix: string, exts: string[]): Promise<string[]> {
+  const { data, error } = await supabase.storage.from(MEDIA_BUCKET).list(prefix, { limit: 1000 });
+  if (error || !data) return [];
+  return data
+    .filter((entry) => entry.id !== null && hasExtension(entry.name, exts))
+    .map((entry) => publicUrl(`${prefix}/${entry.name}`))
+    .sort((a, b) => a.localeCompare(b, undefined, { numeric: true }));
 }
 
 async function getGalleryData() {
-  const galleryDir = path.join(process.cwd(), "public", "assets", "gallery");
-  const subdirs = (await fs.readdir(galleryDir, { withFileTypes: true })).filter((e) => e.isDirectory());
+  const galleryPrefix = "assets/gallery";
+  const { data: entries, error } = await supabase.storage.from(MEDIA_BUCKET).list(galleryPrefix, { limit: 1000 });
+  if (error || !entries) return { rootImages: [], categories: [] };
 
-  const rootImages = await listFiles(galleryDir, extensions);
+  const subdirs = entries.filter((entry) => entry.id === null);
+  const rootImages = await listFiles(galleryPrefix, imageExtensions);
 
   const categories = await Promise.all(
-    subdirs.map(async (d) => {
-      const images = await listFiles(path.join(galleryDir, d.name), extensions);
-      return { label: d.name.charAt(0).toUpperCase() + d.name.slice(1), images };
+    subdirs.map(async (dir) => {
+      const images = await listFiles(`${galleryPrefix}/${dir.name}`, imageExtensions);
+      return { label: dir.name.charAt(0).toUpperCase() + dir.name.slice(1), images };
     })
   );
 
   return { rootImages, categories };
 }
 
-async function getVideos() {
-  const dir = path.join(process.cwd(), "public", "assets", "videos");
-  const exts = [".mp4", ".webm", ".mov"];
-  const entries = await fs.readdir(dir, { withFileTypes: true }).catch(() => []);
-  return entries
-    .filter((e) => !e.isDirectory() && exts.includes(path.extname(e.name).toLowerCase()))
-    .map((e) => `/assets/videos/${e.name}`);
+async function getVideos(): Promise<string[]> {
+  return listFiles("assets/videos", videoExtensions);
 }
 
 function VideosSection({ videos }: { videos: string[] }) {

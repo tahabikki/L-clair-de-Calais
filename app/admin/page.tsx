@@ -25,7 +25,7 @@ const emptyItem: Omit<MenuItem, "id"> = {
   categoryId: "",
   description: "",
   price: "",
-  image: "/assets/menu/patisseries/image_58.jpg",
+  image: "https://xtlchcjaksrnijakmnfv.supabase.co/storage/v1/object/public/media/assets/menu/patisseries/image_58.jpg",
   featured: false,
   available: true,
   tag: "",
@@ -34,7 +34,7 @@ const emptyItem: Omit<MenuItem, "id"> = {
 
 const emptyCategory: Omit<Category, "id"> = {
   name: "",
-  image: "/assets/gallery/shop/image_00.jpg",
+  image: "https://xtlchcjaksrnijakmnfv.supabase.co/storage/v1/object/public/media/assets/gallery/shop/image_00.jpg",
   order: 99,
   visible: true
 };
@@ -152,7 +152,7 @@ export default function AdminPage() {
   return (
     <main className="admin-shell">
       <aside className="admin-sidebar">
-        <Image src="/assets/logo/logo.png" alt="L'Eclair de Calais logo" width={112} height={112} />
+        <Image src="https://xtlchcjaksrnijakmnfv.supabase.co/storage/v1/object/public/media/assets/logo/logo.png" alt="L'Eclair de Calais logo" width={112} height={112} />
         <h3>Back Office</h3>
         <p style={{ color: "rgba(255,255,255,.7)", fontFamily: "Trebuchet MS, sans-serif" }}>
           Simple editing space for menu categories, products, images, and availability.

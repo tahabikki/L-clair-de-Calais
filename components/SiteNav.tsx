@@ -13,7 +13,7 @@ export function SiteNav() {
           <Link href="/gallery">Galerie</Link>
         </nav>
         <Link className="brand" href="/" aria-label="L'Eclair de Calais home">
-          <Image src="/assets/logo/logo.png" alt="L'Eclair de Calais logo" width={180} height={180} priority />
+          <Image src="https://xtlchcjaksrnijakmnfv.supabase.co/storage/v1/object/public/media/assets/logo/logo.png" alt="L'Eclair de Calais logo" width={180} height={180} priority />
         </Link>
         <nav className="nav-links nav-right" aria-label="Secondary navigation">
           <Link href="/about">Maison</Link>
